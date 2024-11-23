@@ -1,0 +1,88 @@
+﻿body {
+    font-family: 'Rubik', 'Roboto', sans-serif !important;
+}
+.bg-blue-dark {
+    color: white;
+    background-color: #333470;
+}
+
+.bg-yellow {
+    background-color: #F9A619;
+}
+.bg-yellow-dark {
+    color: white;
+    background-color: #9b6303;
+}
+
+.bg-gray-light {
+    background-color: #FAFAFA;
+}
+
+.text-yellow {
+    color: #F9A619;
+}
+
+.card {
+    border: none;
+    box-shadow: 0px 2px 2px lightgray;
+}
+.material-symbols-outlined {
+    vertical-align: middle;
+}
+
+.initial-icon, .userimage-icon {
+    border-radius: 50%;
+    width: 2.3rem;
+    height: 2.3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-icon {
+    opacity: 60%;
+    font-size: 16px;
+    padding-right: 5px;
+    padding-bottom: 3px;
+    user-select: none;
+}
+
+.btn-outline-yellow {
+    color: #9b6303;
+    border-color: #9b6303;
+}
+.btn-outline-yellow:hover {
+    background-color: #9b6303;
+    color: white;
+}
+
+#imageHolder {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+#imageHolder {
+    font-size: 3rem;
+}
+
+.edit-picture-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: white;
+    border-radius: 4px;
+    padding: 1px;
+    color: darkslategrey;
+    cursor: pointer;
+}
+
+#uploadstatus {
+    width: 100%;
+}
+/* Error styling */
+input.error {
+    border-color: #dc3545;
+}
+div .error {
+    color: #dc3545;
+}

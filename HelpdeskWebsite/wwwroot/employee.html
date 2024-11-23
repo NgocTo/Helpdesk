@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>HelpDesk Portal - Employees</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300" />
+    <link href="/lib/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-blue-dark">
+        <div class="container">
+            <a class="navbar-brand mx-3 d-flex align-items-center gap-2" href="/">
+                <img src="img/logo-white.png" alt="Bootstrap" width="30" height="24">
+                HelpDesk
+            </a>
+
+            <button class="navbar-toggler mx-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
+                <ul class="navbar-nav mx-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/employee.html">Employees</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/report.html">Reports</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row mt-5 mb-3 text-center">
+            <h1 class="col-12">Employee Management</h1>
+            <p class="col-12 m-0">Helpdesk v1.0</p>
+        </div>
+
+        <!-- Search-->
+
+        <div class="row mt-5 mb-5 justify-content-center">
+            <div class="col-10 col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text" id="employeeSearch"><span class="material-symbols-outlined">search</span></span>
+                    <input type="text" id="searchEmployee" class="form-control" placeholder="Type to search..." aria-label="Search" aria-describedby="search">
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center mt-5 mb-5">
+            <div class="list-group col-12 col-md-10" id="employeeList">
+            </div>
+        </div>
+    </div>
+
+
+    <!-- This <div> contains the employee modal update markup -->
+    <form id="EmployeeModalForm" name="EmployeeModalForm" method="post" action="">
+        <div class="modal fade" id="theModal" data-bs-backdrop="static"
+             data-bs-keyboard="false" tabindex="-1" aria-labelledby="theModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="row align-items-center">
+                            <img class="col-2 img-fluid" src="img/help-desk.png" alt="help desk image" />
+                            <h2 class="modal-title col-9 h4" id="modaltitle">Add/Update Employee</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="mx-2">
+                            <div class="m-2 d-flex justify-content-center text-center flex-wrap">
+                                <div class="position-relative">
+                                    <div id="imageHolder"></div>
+                                    <label for="uploader" class="material-symbols-outlined edit-picture-btn">edit_square</label>
+                                    <input type="file" id="uploader" name="uploader" class="d-none" aria-hidden="true">
+                                </div>
+                                <div id="uploadstatus"></div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-4 col-form-label font-weight-bold">Title</div>
+                                <div class="col-8" id="title">
+                                    <input type="text" placeholder="enter title" id="TextBoxTitle" name="TextBoxTitle" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-4 col-form-label font-weight-bold">First name</div>
+                                <div class="col-8" id="firstname">
+                                    <input type="text" placeholder="enter first name" id="TextBoxFirst" name="TextBoxFirst" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-4 col-form-label font-weight-bold">Last name</div>
+                                <div class="col-8" id="lastname">
+                                    <input type="text" placeholder="enter last name" id="TextBoxLast" name="TextBoxLast" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-4 col-form-label font-weight-bold">Phone number</div>
+                                <div class="col-8" id="phone">
+                                    <input type="text" placeholder="enter phone" id="TextBoxPhone" name="TextBoxPhone" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-4 col-form-label font-weight-bold">Email</div>
+                                <div class="col-8" id="email">
+                                    <input type="text" placeholder="enter email" id="TextBoxEmail" name="TextBoxEmail" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-4 col-form-label font-weight-bold">Department</div>
+                                <div class="col-8"><select id="ddlDepartments" name="ddlDepartments" class="form-control"></select></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center flex-column">
+                        <div id="modalstatus"></div>
+                        <input type="button" value="Update" id="actionbutton" class="m-3 btn btn-outline-dark" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div id="confirmDelete" class="modal fade" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header alert alert-danger">
+                    <h5 class="modal-title">Delete Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="yesbutton" class="btn btn-outline-danger">Delete</button>
+                    <button type="button" id="nobutton" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="lib/js/jquery.validate.min.js"></script>
+    <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="/js/formvalidation.js"></script>
+    <script src="/js/employee.js"></script>
+</body>
+</html>
