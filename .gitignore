@@ -3,6 +3,11 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# settings
+*/appsettings.json
+*/appsettings.Development.json
+*/appsettings.Production.json
+
 # dotenv files
 .env
 
