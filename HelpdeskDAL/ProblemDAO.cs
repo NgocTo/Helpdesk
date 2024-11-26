@@ -27,6 +27,11 @@ namespace HelpdeskDAL
             return await _repo.GetAll();
         }
 
+        public async Task<Problem> GetByDescription(string desc)
+        {
+            return (await _repo.GetOne(prob => prob.Description == desc))!;
+        }
+
         public async Task<int> Add(Problem newProblem)
         {
             return (await _repo.Add(newProblem)).Id;

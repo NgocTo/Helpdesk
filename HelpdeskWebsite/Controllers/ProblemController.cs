@@ -34,7 +34,7 @@ namespace HelpdeskWebsite.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError); // something went wrong
             }
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -49,6 +49,13 @@ namespace HelpdeskWebsite.Controllers
                 MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
                 return StatusCode(StatusCodes.Status500InternalServerError); // something went wrong
             }
+        }
+        [HttpGet("{desc}")]
+        public async Task<IActionResult> GetByDescription(string desc)
+        {
+            ProblemViewModel viewmodel = new();
+            await viewmodel.GetByDescription(desc);
+            return Ok(viewmodel);
         }
         [HttpPost]
         public async Task<ActionResult> Post(ProblemViewModel viewmodel)

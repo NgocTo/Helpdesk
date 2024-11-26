@@ -73,6 +73,29 @@ namespace HelpdeskViewModels
             }
         }
 
+        public async Task GetByDescription(string desc)
+        {
+            try
+            {
+                Problem prob = await _dao.GetByDescription(desc);
+                Id = prob.Id;
+                Description = prob.Description;
+                Timer = Convert.ToBase64String(prob.Timer!);
+            }
+            catch (NullReferenceException nex)
+            {
+                Debug.WriteLine(nex.Message);
+                Description = "not found";
+            }
+            catch (Exception ex)
+            {
+                Description = "not found";
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+        }
+
         public async Task Add()
         {
             Id = -1;
