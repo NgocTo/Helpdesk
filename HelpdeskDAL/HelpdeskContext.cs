@@ -1,11 +1,6 @@
-﻿// ============================================================================
-// Author: Ngoc To
-// Created: Oct 26, 2024
-
-// This class represents the database context, configured to manage the
-// application's database connections and entity mappings.
-// ============================================================================
-
+﻿using System;
+using System.Collections.Generic;
+using Castle.Core.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpdeskDAL;
@@ -21,6 +16,8 @@ public partial class HelpdeskContext : DbContext
     {
     }
 
+    public virtual DbSet<Call> Calls { get; set; }
+
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
@@ -29,7 +26,6 @@ public partial class HelpdeskContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        Console.WriteLine(optionsBuilder);
         if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder.UseSqlServer("Server=(localdb)\\ProjectModels;Database=HelpdeskDb;Trusted_Connection=True;");
@@ -39,6 +35,35 @@ public partial class HelpdeskContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Call>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Call");
+
+            entity.Property(e => e.DateClosed).HasColumnType("smalldatetime");
+            entity.Property(e => e.DateOpened).HasColumnType("smalldatetime");
+            entity.Property(e => e.Notes)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+            entity.Property(e => e.Timer)
+                .IsRowVersion()
+                .IsConcurrencyToken();
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.CallEmployees)
+                .HasForeignKey(d => d.EmployeeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CallHasEmployee");
+
+            entity.HasOne(d => d.Problem).WithMany(p => p.Calls)
+                .HasForeignKey(d => d.ProblemId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CallHasProblem");
+
+            entity.HasOne(d => d.Tech).WithMany(p => p.CallTeches)
+                .HasForeignKey(d => d.TechId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CallHasTech");
+        });
+
         modelBuilder.Entity<Department>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Department");
