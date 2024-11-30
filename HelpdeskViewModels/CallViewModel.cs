@@ -9,11 +9,11 @@ namespace HelpdeskViewModels
         private readonly CallDAO _dao;
         public int Id { get; set; }
         public int EmployeeId { get; set; }
+        public int TechId { get; set; }
         public int ProblemId { get; set; }
         public string? EmployeeName { get; set; }
         public string? ProblemDescription { get; set; }
         public string? TechName { get; set; }
-        public int TechId { get; set; }
         public DateTime DateOpened { get; set; }
         public DateTime? DateClosed { get; set; }
         public bool OpenStatus { get; set; }
@@ -36,10 +36,7 @@ namespace HelpdeskViewModels
                     {
                         Id = call.Id,
                         EmployeeId = call.EmployeeId,
-                        EmployeeName = call.Employee.FirstName + ' ' + call.Employee.LastName,
                         ProblemId = call.ProblemId,
-                        ProblemDescription = call.Problem.Description,
-                        TechName = call.Employee.FirstName + ' ' + call.Employee.LastName,
                         TechId = call.TechId,
                         DateOpened = call.DateOpened,
                         DateClosed = call.DateClosed,
@@ -47,6 +44,11 @@ namespace HelpdeskViewModels
                         Notes = call.Notes,
                         Timer = Convert.ToBase64String(call.Timer!)
                     };
+
+                    ProblemDescription = call.Problem.Description;
+                    EmployeeName = call.Employee.FirstName + " " + call.Employee.LastName;
+                    TechName = call.Employee.FirstName + " " + call.Employee.LastName;
+
                     allVms.Add(vm);
                 }
             }
@@ -72,10 +74,7 @@ namespace HelpdeskViewModels
                     {
                         Id = call.Id,
                         EmployeeId = call.EmployeeId,
-                        EmployeeName = call.Employee.FirstName + ' ' + call.Employee.LastName,
                         ProblemId = call.ProblemId,
-                        ProblemDescription = call.Problem.Description,
-                        TechName = call.Employee.FirstName + ' ' + call.Employee.LastName,
                         TechId = call.TechId,
                         DateOpened = call.DateOpened,
                         DateClosed = call.DateClosed,
@@ -83,6 +82,11 @@ namespace HelpdeskViewModels
                         Notes = call.Notes,
                         Timer = Convert.ToBase64String(call.Timer!)
                     };
+
+                    ProblemDescription = call.Problem.Description;
+                    EmployeeName = call.Employee.FirstName + " " + call.Employee.LastName;
+                    TechName = call.Employee.FirstName + " " + call.Employee.LastName;
+
                     allVms.Add(vm);
                 }
             }
@@ -107,10 +111,7 @@ namespace HelpdeskViewModels
                     {
                         Id = call.Id,
                         EmployeeId = call.EmployeeId,
-                        EmployeeName = call.Employee.FirstName + ' ' + call.Employee.LastName,
                         ProblemId = call.ProblemId,
-                        ProblemDescription = call.Problem.Description,
-                        TechName = call.Employee.FirstName + ' ' + call.Employee.LastName,
                         TechId = call.TechId,
                         DateOpened = call.DateOpened,
                         DateClosed = call.DateClosed,
@@ -118,6 +119,10 @@ namespace HelpdeskViewModels
                         Notes = call.Notes,
                         Timer = Convert.ToBase64String(call.Timer!)
                     };
+
+                    ProblemDescription = call.Problem.Description;
+                    EmployeeName = call.Employee.FirstName + " " + call.Employee.LastName;
+                    TechName = call.Employee.FirstName + " " + call.Employee.LastName;
                     allVms.Add(vm);
                 }
             }
@@ -138,16 +143,17 @@ namespace HelpdeskViewModels
 
                 Id = call.Id;
                 EmployeeId = call.EmployeeId;
-                EmployeeName = call.Employee.FirstName + ' ' + call.Employee.LastName;
                 ProblemId = call.ProblemId;
-                ProblemDescription = call.Problem.Description;
-                TechName = call.Employee.FirstName + ' ' + call.Employee.LastName;
                 TechId = call.TechId;
                 DateOpened = call.DateOpened;
                 DateClosed = call.DateClosed;
                 OpenStatus = call.OpenStatus;
                 Notes = call.Notes;
                 Timer = Convert.ToBase64String(call.Timer!);
+
+                ProblemDescription = call.Problem.Description;
+                EmployeeName = call.Employee.FirstName + " " + call.Employee.LastName;
+                TechName = call.Employee.FirstName + " " + call.Employee.LastName;
             }
             catch (NullReferenceException nex)
             {
@@ -173,9 +179,8 @@ namespace HelpdeskViewModels
                     EmployeeId = this.EmployeeId,
                     ProblemId = this.ProblemId,
                     TechId = this.TechId,
-                    DateOpened = this.DateOpened,
-                    DateClosed = this.DateClosed!,
-                    OpenStatus = this.OpenStatus,
+                    OpenStatus = true,
+                    DateOpened = DateTime.Now,
                     Notes = this.Notes!
                 };
                 Id = await _dao.Add(call);
@@ -195,13 +200,15 @@ namespace HelpdeskViewModels
             {
                 Call call = new()
                 {
+                    Id = this.Id,
                     EmployeeId = this.EmployeeId,
                     ProblemId = this.ProblemId,
                     TechId = this.TechId,
-                    DateOpened = this.DateOpened,
-                    DateClosed = this.DateClosed!,
                     OpenStatus = this.OpenStatus,
-                    Notes = this.Notes!
+                    DateOpened = this.DateOpened,
+                    DateClosed = (this.DateClosed == null && !this.OpenStatus)? DateTime.Now : null,
+                    Notes = this.Notes!,
+                    Timer = Convert.FromBase64String(this.Timer!)
                 };
                 updateStatus = Convert.ToInt16(await _dao.Update(call));
             }
