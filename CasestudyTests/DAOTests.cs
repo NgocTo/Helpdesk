@@ -1,9 +1,122 @@
 using HelpdeskDAL;
+using Xunit.Abstractions;
 
 namespace CasestudyTests
 {
     public class DAOTests
     {
+        private readonly ITestOutputHelper output;
+        public DAOTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
+        [Fact]
+        public async Task Employee_ComprehensiveTest()
+        {
+            EmployeeDAO dao = new();
+            Employee newEmployee = new()
+            {
+                FirstName = "Joe",
+                LastName = "Smith",
+                PhoneNo = "(555)555-1234",
+                Title = "Mr.",
+                DepartmentId = 100,
+                Email = "js@abc.com"
+            };
+            int newEmployeeId = await dao.Add(newEmployee);
+            output.WriteLine("New Employee Generated - Id = " + newEmployeeId);
+            newEmployee = await dao.GetById(newEmployeeId);
+            byte[] oldtimer = newEmployee.Timer!;
+            output.WriteLine("New Employee " + newEmployee.Id + " Retrieved");
+            newEmployee.PhoneNo = "(555)555-1233";
+            if (await dao.Update(newEmployee) == UpdateStatus.Ok)
+            {
+                output.WriteLine("Employee " + newEmployeeId + " phone# was updated to - " + newEmployee.PhoneNo);
+            }
+            else
+            {
+                output.WriteLine("Employee " + newEmployeeId + " phone# was not updated!");
+            }
+            newEmployee.Timer = oldtimer; // to simulate another user
+            newEmployee.PhoneNo = "doesn't matter data is stale now";
+            if (await dao.Update(newEmployee) == UpdateStatus.Stale)
+            {
+                output.WriteLine("Employee " + newEmployeeId + " was not updated due to stale data");
+            }
+            dao = new();
+            await dao.GetById(newEmployeeId);
+            if (await dao.Delete(newEmployeeId) == 1)
+            {
+                output.WriteLine("Employee " + newEmployeeId + " was deleted!");
+            }
+            else
+            {
+                output.WriteLine("Employee " + newEmployeeId + " was not deleted");
+            }
+            // should be null because it was just deleted
+            Assert.Null(await dao.GetById(newEmployeeId));
+        }
+
+
+        [Fact]
+        public async Task Call_ComprehensiveTest()
+        {
+            CallDAO dao = new();
+            EmployeeDAO eDAO = new();
+            ProblemDAO pDAO = new();
+
+            Employee employee = await eDAO.GetByLastName("To");
+            Employee techEmployee = await eDAO.GetByLastName("Burner");
+
+            Problem problem = await pDAO.GetByDescription("Hard Drive Failure");
+
+            Call newCall = new()
+            {
+                EmployeeId = employee.Id,
+                TechId = techEmployee.Id,
+                ProblemId = problem.Id,
+                DateOpened = DateTime.Now,
+                OpenStatus = true,
+                Notes = employee.FirstName + " " + employee.LastName + "'s drive is " + employee.LastName + ", " + techEmployee.LastName + " to fix it"
+            };
+            int newCallId = await dao.Add(newCall);
+            output.WriteLine("New Call Generated - Id = " + newCallId);
+            dao = new CallDAO();
+            newCall = await dao.GetById(newCallId);
+            byte[] oldtimer = newCall.Timer!;
+            output.WriteLine("New Call " + newCall.Id + " Retrieved");
+            newCall.Notes += "\n Ordered new drive!";
+            if (await dao.Update(newCall) == UpdateStatus.Ok)
+            {
+                output.WriteLine("Call " + newCall + " note was updated to - " + newCall.Notes);
+            }
+            else
+            {
+                output.WriteLine("Call " + newCallId + " note was not updated!");
+            }
+            newCall.Timer = oldtimer; // to simulate another user
+            newCall.Notes = "doesn't matter data is stale now";
+            if (await dao.Update(newCall) == UpdateStatus.Stale)
+            {
+                output.WriteLine("Call " + newCallId + " was not updated due to stale data");
+            }
+            dao = new();
+            await dao.GetById(newCallId);
+            if (await dao.Delete(newCallId) == 1)
+            {
+                output.WriteLine("Call " + newCallId + " was deleted!");
+            }
+            else
+            {
+                output.WriteLine("Call " + newCallId + " was not deleted");
+            }
+            // should be null because it was just deleted
+            Assert.Null(await dao.GetById(newCallId));
+        }
+
+
+
         [Fact]
         public async void Employee_GetByEmailTest()
         {
