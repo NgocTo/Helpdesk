@@ -62,6 +62,37 @@ namespace HelpdeskViewModels
                 throw;
             }
         }
+        public async Task GetByLastName(string lastName)
+        {
+            try
+            {
+                Employee emp = await _dao.GetByLastName(lastName);
+                Title = emp.Title;
+                Firstname = emp.FirstName;
+                Lastname = emp.LastName;
+                Phoneno = emp.PhoneNo;
+                Email = emp.Email;
+                Id = emp.Id;
+                DepartmentId = emp.DepartmentId;
+                if (emp.StaffPicture != null)
+                {
+                    StaffPicture64 = Convert.ToBase64String(emp.StaffPicture);
+                }
+                Timer = Convert.ToBase64String(emp.Timer!);
+            }
+            catch (NullReferenceException nex)
+            {
+                Debug.WriteLine(nex.Message);
+                Lastname = "not found";
+            }
+            catch (Exception ex)
+            {
+                Lastname = "not found";
+                Debug.WriteLine("Problem in " + GetType().Name + " " +
+                MethodBase.GetCurrentMethod()!.Name + " " + ex.Message);
+                throw;
+            }
+        }
         public async Task GetById(int id)
         {
             try

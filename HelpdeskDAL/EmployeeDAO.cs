@@ -19,6 +19,10 @@ namespace HelpdeskDAL
         {
             return (await _repo.GetOne(emp => emp.Email == email))!;
         }
+        public async Task<Employee> GetByLastName(string lastName)
+        {
+            return (await _repo.GetOne(emp => emp.LastName == lastName))!;
+        }
 
         public async Task<Employee> GetById(int id)
         {
